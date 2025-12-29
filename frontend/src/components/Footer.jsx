@@ -26,8 +26,8 @@ export default function Footer() {
             Raising Winners, Building Destinies through the power of the Word and the Spirit.
           </p>
           <div style={{ display: 'flex', gap: '20px', marginTop: '20px', justifyContent: 'center' }}>
-            <a href="#" className="social-icon"><Facebook size={20} /></a>
-            <a href="#" className="social-icon"><Youtube size={20} /></a>
+            <a href="https://www.facebook.com/share/14QEDnwsXVu/" className="social-icon"><Facebook size={20} /> </a>
+            <a href="https://youtube.com/@abundant_rainvosloorus?si=utVuxW1wqboaDILU" className="social-icon"><Youtube size={20} /></a>
           </div>
         </div>
 
