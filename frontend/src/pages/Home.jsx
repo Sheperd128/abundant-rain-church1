@@ -71,7 +71,7 @@ export default function Home() {
             <div style={{ width: '60px', height: '4px', backgroundColor: 'var(--church-gold)', marginBottom: '20px' }}></div>
             <p style={{ marginBottom: '20px', color: '#555', fontSize: '1rem', lineHeight: '1.6' }}>
               Abundant Rain Church is more than just a building; we are a community of believers passionate about God's presence.
-              Our mission is to change lives and build destinies through the power of the Word.
+              Our mission is to raising winners and build destinies through the power of the Word.
             </p>
             <Link to="/history" className="btn btn-primary">Read Our Story</Link>
           </div>
