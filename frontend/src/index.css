@@ -21,12 +21,11 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* Prevents side-scrolling on mobile */
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; height: auto; display: block; } /* Prevents images from breaking layout */
 
 /* --- UTILITIES --- */
 .container {
@@ -36,7 +35,7 @@ a {
 }
 
 .btn {
-  padding: 10px 20px;
+  padding: 12px 24px; /* Larger touch target for phones */
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
@@ -46,6 +45,7 @@ a {
   justify-content: center;
   gap: 8px;
   transition: 0.3s;
+  font-size: 1rem;
 }
 
 .btn-primary { background-color: var(--church-blue); color: white; }
@@ -75,34 +75,40 @@ a {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
 }
 
+/* Logo Styling */
 .nav-logo {
-  font-size: 1.5rem;
-  font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-.logo-circle {
-  width: 40px;
-  height: 40px;
-  background-color: var(--church-gold);
-  color: var(--church-blue);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 12px;
+  text-decoration: none;
   flex-shrink: 0;
 }
 
-.nav-links {
-  display: flex;
-  gap: 25px;
-  align-items: center;
+.logo-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--church-gold);
+  background-color: white;
 }
 
+.logo-text {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+/* Nav Links */
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
 .nav-links a:hover { color: var(--church-gold); }
 
 /* Dropdown */
@@ -124,7 +130,7 @@ a {
 
 /* --- HOME PAGE --- */
 .hero-section {
-  height: 600px;
+  min-height: 80vh; /* Better for mobile heights */
   background-size: cover;
   background-position: center;
   position: relative;
@@ -133,30 +139,28 @@ a {
   justify-content: center;
   text-align: center;
   color: white;
+  padding: 0 20px;
 }
 
 .hero-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(24, 44, 91, 0.7);
+  background: rgba(24, 44, 91, 0.75);
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
   max-width: 800px;
-  padding: 0 20px;
+  width: 100%;
 }
-
-.hero-title { font-size: 3.5rem; margin-bottom: 20px; line-height: 1.2; }
-.text-gold { color: var(--church-gold); }
 
 .info-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Fits smaller screens */
+  gap: 20px;
   max-width: 1200px;
-  margin: -80px auto 50px auto;
+  margin: -50px auto 50px auto;
   position: relative;
   z-index: 3;
   padding: 0 20px;
@@ -164,22 +168,16 @@ a {
 
 .card {
   background: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.1);
   border-top: 5px solid var(--church-gold);
 }
 
-.card h3 { margin-bottom: 15px; color: var(--church-blue); display: flex; align-items: center; gap: 10px; }
-
-.map-section {
-  padding: 60px 20px;
-  background: white;
-}
-
+.map-section { padding: 60px 20px; background: white; }
 .map-container {
   display: flex;
-  gap: 50px;
+  gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
   align-items: center;
@@ -194,67 +192,174 @@ a {
   display: flex;
   flex-direction: column;
   padding: 20px 0;
-  flex-shrink: 0;
+  overflow-y: auto; 
 }
-
-.sidebar a {
-  padding: 15px 25px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: 0.2s;
-  color: rgba(255,255,255,0.8);
-}
-.sidebar a:hover, .sidebar a.active { 
-  background-color: rgba(255,255,255,0.1); 
-  border-left: 4px solid var(--church-gold);
-  color: white; 
-}
-
 .admin-content { flex: 1; overflow-y: auto; background-color: #f4f4f4; }
-.admin-header { background: white; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.admin-main { padding: 30px; }
+.admin-main { padding: 20px; }
+.sidebar a { padding: 15px 20px; display: flex; align-items: center; gap: 10px; color: rgba(255,255,255,0.8); }
+.sidebar a:hover, .sidebar a.active { background-color: rgba(255,255,255,0.1); border-left: 4px solid var(--church-gold); color: white; }
 
 /* --- FORMS --- */
-.form-group { margin-bottom: 15px; }
 .form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem;
 }
-.form-row { display: flex; gap: 20px; }
 
-/* --- MOBILE RESPONSIVENESS (FIXED) --- */
+/* =========================================
+   MOBILE RESPONSIVENESS (SMART PHONE FIXES)
+   ========================================= */
+
 @media (max-width: 900px) {
-  /* Navbar Stacking */
-  .nav-container { flex-direction: column; gap: 15px; padding: 15px; }
+  /* Stack the Navbar */
+  .nav-container { justify-content: center; padding: 15px; }
+  .nav-logo { margin-bottom: 15px; }
   .nav-links { 
-    display: flex; 
     flex-wrap: wrap; 
     justify-content: center; 
     gap: 15px; 
-    font-size: 0.9rem;
+    width: 100%;
   }
-  .navbar { height: auto; }
+  .nav-links a, .dropdown span { font-size: 0.9rem; padding: 5px; }
+  
+  /* Make Dropdowns friendly for touch */
   .dropdown-content { position: static; box-shadow: none; border: 1px solid #eee; width: 100%; text-align: center; }
   
-  /* Hero */
-  .hero-title { font-size: 2.2rem; }
-  .info-cards { margin-top: 30px; grid-template-columns: 1fr; }
-  
-  /* Admin Mobile */
-  .admin-layout { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; overflow-x: auto; flex-direction: row; padding: 10px; }
-  .sidebar a { padding: 10px; font-size: 0.8rem; flex-direction: column; text-align: center; gap: 5px; }
-  .admin-main { padding: 15px; }
-  
-  /* Map */
-  .map-container { flex-direction: column; }
+  /* Stack Map Section */
+  .map-container { flex-direction: column-reverse; }
+  .map-container > div { width: 100%; }
 }
 
-@media (max-width: 480px) {
-  .hero-title { font-size: 1.8rem; }
-  .form-row { flex-direction: column; gap: 10px; }
+@media (max-width: 600px) {
+  /* Smaller Fonts for Mobile */
+  h1 { font-size: 2rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  p { font-size: 1rem !important; }
+  
+  /* Navbar Tweaks */
+  .logo-text { font-size: 1.2rem; }
+  .nav-links { gap: 10px; }
+  .btn { padding: 8px 16px; font-size: 0.9rem; }
+  
+  /* Admin on Mobile */
+  .admin-layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; flex-direction: row; padding: 10px; overflow-x: auto; white-space: nowrap; }
+  .sidebar a { padding: 10px; font-size: 0.8rem; border-left: none; border-bottom: 3px solid transparent; }
+  .sidebar a.active { border-left: none; border-bottom: 3px solid var(--church-gold); }
+}
+
+/* =========================================
+   ADMIN PANEL RESPONSIVE STYLES
+   ========================================= */
+
+/* 1. Page Headers */
+.admin-page-header {
+  margin-bottom: 25px;
+}
+.admin-page-header h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem); /* Auto-shrink text */
+  margin-bottom: 5px;
+}
+.admin-page-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* 2. Generic Card Style */
+.admin-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+}
+
+/* 3. Forms */
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  flex: 1; /* Takes equal space */
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* 4. List Items (The cards showing Events, Sermons, etc) */
+.list-item {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 15px;
+  border-left: 4px solid transparent; /* Ready for status colors */
+}
+
+/* 5. Dashboard Specifics */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.dashboard-split {
+  display: flex;
+  gap: 25px;
+  align-items: flex-start;
+}
+
+/* =========================================
+   MOBILE OVERRIDES (The Magic Part)
+   ========================================= */
+@media (max-width: 768px) {
+  /* Stack Forms */
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  /* Stack Dashboard Split (Live Stream + Actions) */
+  .dashboard-split {
+    flex-direction: column;
+  }
+  
+  /* Adjust List Items for Phone */
+  .list-item {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .list-item > div {
+    width: 100%; /* Content takes full width */
+  }
+  
+  .list-item button {
+    width: 100%; /* Buttons become full width */
+    justify-content: center;
+    padding: 12px;
+  }
+
+  /* Adjust Header */
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .date-badge {
+    display: none; /* Hide date on small phones to save space */
+  }
 }

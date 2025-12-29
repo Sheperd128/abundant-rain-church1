@@ -15,7 +15,6 @@ export default function Announcements() {
   const fetchUpdates = async () => {
     try {
       const { data } = await api.get('/ministries'); 
-      console.log("Fetched Updates:", data); // <--- DEBUGGING LOG
       setAllUpdates(data);
       setFilteredUpdates(data);
     } catch (error) {
@@ -51,14 +50,17 @@ export default function Announcements() {
     <div>
       {/* Header */}
       <div style={{backgroundColor: 'var(--church-blue)', color: 'white', padding: '60px 20px', textAlign: 'center'}}>
-        <h1 style={{fontSize: '3rem', marginBottom: '10px'}}>News & Announcements</h1>
-        <p style={{fontSize: '1.2rem', color: 'var(--church-gold)'}}>Latest updates from Abundant Rain Vosloorus</p>
+        <h1 style={{fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '10px'}}>News & Announcements</h1>
+        <p style={{fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--church-gold)'}}>Latest updates from Abundant Rain Vosloorus</p>
       </div>
 
       <div className="container" style={{padding: '40px 20px'}}>
         
-        {/* Filter Buttons */}
-        <div style={{display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '20px', marginBottom: '30px', borderBottom: '1px solid #eee'}}>
+        {/* Filter Buttons (Scrollable on Mobile) */}
+        <div style={{
+          display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '20px', marginBottom: '30px', 
+          borderBottom: '1px solid #eee', whiteSpace: 'nowrap', WebkitOverflowScrolling: 'touch'
+        }}>
           {['All', 'General', 'Men', 'Women', 'Youth', 'Children'].map(cat => (
             <button 
               key={cat}
@@ -71,7 +73,7 @@ export default function Announcements() {
                 backgroundColor: filter === cat ? 'var(--church-blue)' : '#f0f0f0',
                 color: filter === cat ? 'white' : '#333',
                 fontWeight: 'bold',
-                whiteSpace: 'nowrap',
+                flexShrink: 0, /* Prevent squishing */
                 transition: '0.3s'
               }}
             >
@@ -88,11 +90,11 @@ export default function Announcements() {
             <p>Check back later or select "All" to see other news.</p>
           </div>
         ) : (
-          <div style={{display: 'grid', gap: '25px'}}>
+          <div style={{display: 'grid', gap: '25px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))'}}>
             {filteredUpdates.map(update => (
               <div key={update._id} style={{
                 backgroundColor: 'white', 
-                padding: '30px', 
+                padding: '25px', 
                 borderRadius: '12px', 
                 boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
                 borderLeft: `6px solid ${getCategoryColor(update.ministry)}`,
@@ -115,8 +117,8 @@ export default function Announcements() {
                   </span>
                 </div>
                 
-                <h2 style={{margin: '0 0 15px 0', color: '#333', fontSize: '1.5rem'}}>{update.title}</h2>
-                <p style={{color: '#555', lineHeight: '1.7', whiteSpace: 'pre-wrap', fontSize: '1.05rem'}}>{update.content}</p>
+                <h2 style={{margin: '0 0 15px 0', color: '#333', fontSize: '1.4rem'}}>{update.title}</h2>
+                <p style={{color: '#555', lineHeight: '1.7', whiteSpace: 'pre-wrap', fontSize: '1rem'}}>{update.content}</p>
               </div>
             ))}
           </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../../apiClient';
-import { Trash2, UserPlus, Shield } from 'lucide-react';
+import { Trash2, UserPlus } from 'lucide-react';
 
 export default function TeamManager() {
   const [users, setUsers] = useState([]);
@@ -30,7 +30,7 @@ export default function TeamManager() {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure? This will delete their account permanently.')) {
+    if (window.confirm('Delete this user account?')) {
       try {
         await api.delete(`/auth/users/${id}`);
         fetchUsers();
@@ -40,37 +40,39 @@ export default function TeamManager() {
 
   return (
     <div>
-      <h1>Team Management</h1>
-      <p style={{color:'#666', marginBottom:'20px'}}>Create accounts for your ministry leaders.</p>
+      <div className="admin-page-header">
+        <h1>Team Management</h1>
+        <p>Create accounts for your ministry leaders and admins.</p>
+      </div>
 
       {/* CREATE USER FORM */}
-      <div className="card" style={{marginBottom:'30px', borderTop:'5px solid var(--church-blue)'}}>
+      <div className="admin-card">
         <h3>Add New Leader</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{marginTop:'20px'}}>
           <div className="form-row">
-            <div className="form-group" style={{flex:1}}>
+            <div className="form-group">
               <label>Full Name</label>
               <input className="form-control" required value={formData.name} onChange={e=>setFormData({...formData, name:e.target.value})} />
             </div>
-            <div className="form-group" style={{flex:1}}>
-              <label>Email (Login Username)</label>
+            <div className="form-group">
+              <label>Email (Username)</label>
               <input type="email" className="form-control" required value={formData.email} onChange={e=>setFormData({...formData, email:e.target.value})} />
             </div>
           </div>
 
           <div className="form-row">
-            <div className="form-group" style={{flex:1}}>
+            <div className="form-group">
               <label>Password</label>
               <input type="text" className="form-control" required value={formData.password} onChange={e=>setFormData({...formData, password:e.target.value})} />
             </div>
-            <div className="form-group" style={{flex:1}}>
+            <div className="form-group">
               <label>Phone Number</label>
               <input className="form-control" value={formData.phone} onChange={e=>setFormData({...formData, phone:e.target.value})} />
             </div>
           </div>
 
           <div className="form-row">
-            <div className="form-group" style={{flex:1}}>
+            <div className="form-group">
               <label>Role</label>
               <select className="form-control" value={formData.role} onChange={e=>setFormData({...formData, role:e.target.value})}>
                 <option value="ministry_leader">Ministry Leader</option>
@@ -78,7 +80,7 @@ export default function TeamManager() {
                 <option value="superadmin">Super Admin (Pastor)</option>
               </select>
             </div>
-            <div className="form-group" style={{flex:1}}>
+            <div className="form-group">
               <label>Assigned Ministry</label>
               <select className="form-control" value={formData.ministry} onChange={e=>setFormData({...formData, ministry:e.target.value})}>
                 <option value="General">General</option>
@@ -89,20 +91,28 @@ export default function TeamManager() {
               </select>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary"><UserPlus size={18} /> Create Account</button>
+          <button type="submit" className="btn btn-primary" style={{width:'100%', justifyContent:'center'}}>
+            <UserPlus size={18} /> Create Account
+          </button>
         </form>
       </div>
 
       {/* USER LIST */}
       <div style={{display:'grid', gap:'15px'}}>
         {users.map(u => (
-          <div key={u._id} className="card" style={{display:'flex', justifyContent:'space-between', alignItems:'center', borderLeft: u.role === 'superadmin' ? '5px solid gold' : '5px solid #ddd'}}>
+          <div key={u._id} className="list-item" style={{borderLeft: u.role === 'superadmin' ? '4px solid gold' : '4px solid #ddd'}}>
             <div>
-              <h4 style={{margin:0}}>{u.name} <span style={{fontSize:'0.8rem', color:'#666'}}>({u.role})</span></h4>
-              <p style={{margin:0, fontSize:'0.9rem', color:'#888'}}>{u.email} | {u.ministry}</p>
+              <h4 style={{margin:0, fontSize:'1.1rem'}}>{u.name}</h4>
+              <p style={{margin:0, fontSize:'0.9rem', color:'#666'}}>{u.email}</p>
+              <div style={{marginTop:'5px', fontSize:'0.8rem'}}>
+                 <span style={{background:'#eee', padding:'3px 8px', borderRadius:'4px'}}>{u.role}</span>
+                 {u.ministry !== 'General' && <span style={{marginLeft:'5px', background:'#eef2ff', padding:'3px 8px', borderRadius:'4px', color:'blue'}}>{u.ministry}</span>}
+              </div>
             </div>
             {u.role !== 'superadmin' && (
-              <button onClick={() => handleDelete(u._id)} className="btn btn-red" style={{padding:'5px 10px'}}><Trash2 size={16}/></button>
+              <button onClick={() => handleDelete(u._id)} className="btn btn-red">
+                <Trash2 size={16}/>
+              </button>
             )}
           </div>
         ))}
