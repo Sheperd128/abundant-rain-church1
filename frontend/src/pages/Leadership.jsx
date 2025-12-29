@@ -180,10 +180,10 @@ export default function Leadership() {
 
           {/* Text Right */}
           <div style={{ flex: '2 1 500px' }}>
-            <h2 style={sectionTitle}>Pastor Simphiwe Nkutha</h2>
+            <h2 style={sectionTitle}>Pastor Siphiwe Nkutha</h2>
             <h4 style={roleTitle}>Pastor of Leadership Development</h4>
-            
-            <p style={text}>Pastor Simphiwe Nkutha carries a strong passion for education, leadership development, and the empowerment of young people.</p>
+
+            <p style={text}>Pastor Siphiwe Nkutha carries a strong passion for education, leadership development, and the empowerment of young people.</p>
 
             <h5 style={subHeader}>Youth & Education Focus</h5>
             <p style={text}>He believes that investing in education and nurturing youth leadership is essential for building strong communities and a sustainable future for the church. His ministry seeks to inspire discipline, purpose, and faith-driven excellence in the next generation.</p>
