@@ -174,7 +174,7 @@ export default function Leadership() {
           {/* Image Left */}
           <div style={{ flex: '1 1 350px' }}>
             <img src={pastorSimphiwe} alt="Pastor Simphiwe" style={{ width: '100%', borderRadius: '15px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }} />
-            <div style={glowingNameStyle}>Pastor Simphiwe Nkutha</div>
+            <div style={glowingNameStyle}>Pastor Siphiwe Nkutha</div>
             <div style={glowingRoleStyle}>Pastor of Leadership Development</div>
           </div>
 
