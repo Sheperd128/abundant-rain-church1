@@ -1,35 +1,40 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Youtube, MapPin, Phone, Mail } from 'lucide-react';
+import { Facebook, Youtube, MapPin, Phone } from 'lucide-react'; // Removed Mail import
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer style={{ backgroundColor: 'var(--church-blue)', color: 'white', marginTop: 'auto' }}>
+    <footer style={{ 
+      backgroundColor: 'var(--church-blue)', 
+      color: 'white', 
+      marginTop: 'auto',
+      backgroundImage: 'linear-gradient(to bottom, var(--church-blue), #0f1c3f)'
+    }}>
       <div className="container" style={{ 
-        padding: '50px 20px', 
+        padding: '60px 20px', 
         display: 'grid', 
-        // FIX: Using 160px allows 2 columns to fit on a mobile screen side-by-side
-        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', 
-        gap: '30px' 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+        gap: '40px',
+        textAlign: 'center', 
       }}>
         
-        {/* Column 1: Identity (Spans full width on very small screens if needed) */}
-        <div style={{ minWidth: '200px' }}>
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--church-gold)' }}>Abundant Rain</h3>
-          <p style={{ lineHeight: '1.5', color: '#ccc', fontSize: '0.9rem' }}>
-            Rasing Winnerss, Building Destinies through the power of the Word and the Spirit.
+        {/* Column 1: Identity */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <h3 style={{ fontSize: '1.8rem', marginBottom: '15px', color: 'var(--church-gold)', letterSpacing: '1px' }}>Abundant Rain</h3>
+          <p style={{ lineHeight: '1.6', color: '#ccc', fontSize: '0.95rem', maxWidth: '300px' }}>
+            Raising Winners, Building Destinies through the power of the Word and the Spirit.
           </p>
-          <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
-            <a href="#" style={{ color: 'white', padding: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}><Facebook size={18} /></a>
-            <a href="#" style={{ color: 'white', padding: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}><Youtube size={18} /></a>
+          <div style={{ display: 'flex', gap: '20px', marginTop: '20px', justifyContent: 'center' }}>
+            <a href="#" className="social-icon"><Facebook size={20} /></a>
+            <a href="#" className="social-icon"><Youtube size={20} /></a>
           </div>
         </div>
 
         {/* Column 2: Quick Links */}
-        <div>
-          <h4 style={{ fontSize: '1.1rem', marginBottom: '15px', color: 'var(--church-gold)', textTransform: 'uppercase' }}>Quick Links</h4>
-          <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: '8px', fontSize: '0.9rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'var(--church-gold)', textTransform: 'uppercase', letterSpacing: '1px' }}>Quick Links</h4>
+          <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '1rem' }}>
             <li><Link to="/about" className="footer-link">About Us</Link></li>
             <li><Link to="/sermons" className="footer-link">Sermons</Link></li>
             <li><Link to="/give" className="footer-link">Ways to Give</Link></li>
@@ -38,38 +43,61 @@ export default function Footer() {
         </div>
 
         {/* Column 3: Contact */}
-        <div>
-          <h4 style={{ fontSize: '1.1rem', marginBottom: '15px', color: 'var(--church-gold)', textTransform: 'uppercase' }}>Contact Us</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem' }}>
-            <p style={{ display: 'flex', alignItems: 'start', gap: '10px', color: '#ccc' }}>
-              <MapPin size={16} color="var(--church-gold)" style={{flexShrink: 0, marginTop: '3px'}} /> 
-              <span>12669 Umsimbithi Dr,<br/> Vosloorus Ext 23</span>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <h4 style={{ fontSize: '1.2rem', marginBottom: '20px', color: 'var(--church-gold)', textTransform: 'uppercase', letterSpacing: '1px' }}>Contact Us</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', fontSize: '0.95rem', alignItems: 'center' }}>
+            <p style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ccc' }}>
+              <MapPin size={18} color="var(--church-gold)" /> 
+              <span>12669 Umsimbithi Dr, Vosloorus Ext 23</span>
             </p>
             <p style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ccc' }}>
-              <Phone size={16} color="var(--church-gold)" /> 
+              <Phone size={18} color="var(--church-gold)" /> 
               <span>+27 76 144 1433</span>
-            </p>
-            <p style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ccc' }}>
-              <Mail size={16} color="var(--church-gold)" /> 
             </p>
           </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', padding: '20px', textAlign: 'center', fontSize: '0.8rem', color: '#999' }}>
-        <p>&copy; {currentYear} Abundant Rain Church. All rights reserved.</p>
+      <div style={{ 
+        borderTop: '1px solid rgba(255,255,255,0.1)', 
+        padding: '25px 20px', 
+        textAlign: 'center', 
+        fontSize: '0.85rem', 
+        color: '#888',
+        backgroundColor: 'rgba(0,0,0,0.2)' 
+      }}>
+        <p style={{ marginBottom: '10px' }}>&copy; {currentYear} Abundant Rain Church. All rights reserved.</p>
         
-        <div style={{ marginTop: '10px' }}>
-          <Link to="/login" style={{ color: '#555', textDecoration: 'none', transition: '0.3s' }} onMouseOver={e => e.target.style.color='#888'} onMouseOut={e => e.target.style.color='#555'}>
+        <div>
+          <Link to="/login" style={{ color: '#555', textDecoration: 'none', transition: '0.3s' }} onMouseOver={e => e.target.style.color='#aaa'} onMouseOut={e => e.target.style.color='#555'}>
             Staff Portal
           </Link>
         </div>
       </div>
 
       <style>{`
-        .footer-link { color: #ccc; text-decoration: none; transition: 0.3s; }
-        .footer-link:hover { color: var(--church-gold); padding-left: 5px; }
+        .footer-link { color: #ccc; text-decoration: none; transition: 0.3s; display: inline-block; }
+        .footer-link:hover { color: var(--church-gold); transform: translateX(5px); }
+        
+        .social-icon { 
+          color: white; 
+          padding: 10px; 
+          background: rgba(255,255,255,0.1); 
+          border-radius: 50%; 
+          transition: 0.3s; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center;
+        }
+        .social-icon:hover { background: var(--church-gold); color: var(--church-blue); transform: translateY(-3px); }
+
+        /* On larger screens, align left for better readability */
+        @media (min-width: 768px) {
+          .container { text-align: left !important; }
+          .container > div { alignItems: flex-start !important; text-align: left !important; }
+          .social-icon { margin-right: 10px; }
+        }
       `}</style>
     </footer>
   );
