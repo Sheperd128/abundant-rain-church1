@@ -18,7 +18,7 @@ export default function Footer() {
         <div style={{ minWidth: '200px' }}>
           <h3 style={{ fontSize: '1.5rem', marginBottom: '15px', color: 'var(--church-gold)' }}>Abundant Rain</h3>
           <p style={{ lineHeight: '1.5', color: '#ccc', fontSize: '0.9rem' }}>
-            Changing Lives, Building Destinies through the power of the Word and the Spirit.
+            Rasing Winnerss, Building Destinies through the power of the Word and the Spirit.
           </p>
           <div style={{ display: 'flex', gap: '15px', marginTop: '15px' }}>
             <a href="#" style={{ color: 'white', padding: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }}><Facebook size={18} /></a>
@@ -51,7 +51,6 @@ export default function Footer() {
             </p>
             <p style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#ccc' }}>
               <Mail size={16} color="var(--church-gold)" /> 
-              <span>info@abundantrain.com</span>
             </p>
           </div>
         </div>

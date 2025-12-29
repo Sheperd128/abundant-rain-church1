@@ -82,11 +82,11 @@ export default function Leadership() {
             <p style={text}>Answering God's call to missionary work, Pastor Umanah has served in some of the world's most challenging regions, including Islamic nations across North Africa and the Arab world. His courage and faithfulness in these difficult fields have resulted in countless individuals coming to know Christ.</p>
 
             <h5 style={subHeader}>Denominational Leadership and Speaking Ministry</h5>
-            <p style={text}>Since the early 1990s, Pastor Umanah has been a pioneering member of the Full Gospel Baptist Church in America. He is a respected voice across denominational lines and has been invited to speak at world conventions for Baptist, Lutheran, Methodist, Episcopal, Seventh-day Advent, Oneness Apostolic, Mennonite, Anabaptist, and many other Christian denominations.</p>
+            <p style={text}>Since the early 1990s, Pastor Umanah has been a pioneering member of the Full Gospel Baptist Church in America. He is a respected voice across denominational lines and has been invited to speak at world conventions for Baptist, Lutheran, Methodist, Episcopal, Advent Churches Movement, Oneness Apostolic, Mennonite, Anabaptist, and many other Christian denominations.</p>
 
             <h5 style={subHeader}>Academic Contributions</h5>
             <p style={text}>Pastor Umanah has served as a visiting lecturer at prominent theological seminaries around the world, where he has trained and mentored future ministry leaders. His teaching combines theological depth with practical application, preparing students for effective Kingdom service.</p>
-
+ 
             <h5 style={subHeader}>Church Planting</h5>
             <p style={text}>Pastor Umanah founded Blessed Hope Fellowship in South Africa, which grew to include campuses in South Africa, Namibia, Zimbabwe, and Europe. After years of faithful service, Pastor Umanah followed God's leading to establish a new work.</p>
 
