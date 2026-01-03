@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
 import api from '../../apiClient';
-import { Send, Trash2, Megaphone } from 'lucide-react';
+import { Send, Trash2, Upload } from 'lucide-react';
 
 export default function MinistryUpdatesManager() {
   const [updates, setUpdates] = useState([]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [ministry, setMinistry] = useState('General'); // Default to General for Admin
+  const [ministry, setMinistry] = useState('General');
+  const [file, setFile] = useState(null); // State for image
+  const [loading, setLoading] = useState(false);
 
-  // Get current user to check permissions
   const user = JSON.parse(localStorage.getItem('userInfo') || '{}');
 
   useEffect(() => {
     fetchUpdates();
-    // If not admin, lock the dropdown to their specific ministry
     if (user.role === 'ministry_leader' && user.ministry) {
       setMinistry(user.ministry);
     }
@@ -23,25 +23,37 @@ export default function MinistryUpdatesManager() {
     try {
       const { data } = await api.get('/ministries'); 
       setUpdates(data);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) { console.error(error); }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    // CRITICAL: Use FormData for file uploads
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('ministry', ministry);
+    if (file) {
+      formData.append('image', file);
+    }
+
     try {
-      await api.post('/ministries', { title, content, ministry });
+      await api.post('/ministries', formData); // Send FormData
       alert('Announcement Posted!');
+      // Reset Form
       setTitle('');
       setContent('');
-      // Don't reset ministry if they are a leader, keep it locked
-      if(user.role === 'superadmin' || user.role === 'admin') {
-        setMinistry('General');
-      }
+      setFile(null);
+      document.getElementById('fileInput').value = ''; // Clear input visually
+      if(user.role === 'superadmin' || user.role === 'admin') setMinistry('General');
+      
       fetchUpdates();
     } catch (error) {
-      alert('Error posting update');
+      alert('Error posting update. Check your connection.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,35 +62,23 @@ export default function MinistryUpdatesManager() {
       try {
         await api.delete(`/ministries/${id}`);
         fetchUpdates();
-      } catch (error) {
-        alert('Error deleting item');
-      }
+      } catch (error) { alert('Error deleting item'); }
     }
   };
 
   return (
     <div>
       <h1>Ministry Updates & News</h1>
-      <p style={{color: '#666', marginBottom: '20px'}}>Post announcements for your specific ministry group or the whole church.</p>
-
+      
       {/* POST FORM */}
-      <div className="card" style={{marginBottom: '30px', borderTop: '5px solid var(--church-blue)'}}>
+      <div className="admin-card">
         <h3>Create New Announcement</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{marginTop:'20px'}}>
           
           <div className="form-group">
-            <label>Select Target Audience</label>
-            <select 
-              className="form-control" 
-              value={ministry} 
-              onChange={(e) => setMinistry(e.target.value)}
-              disabled={user.role === 'ministry_leader'} // Lock if not admin
-            >
-              {/* Only Admins/Pastors see General option */}
-              {(user.role === 'superadmin' || user.role === 'admin') && (
-                <option value="General">General / Church-wide (News Page)</option>
-              )}
-              
+            <label>Target Audience</label>
+            <select className="form-control" value={ministry} onChange={(e) => setMinistry(e.target.value)} disabled={user.role === 'ministry_leader'}>
+              {(user.role === 'superadmin' || user.role === 'admin') && <option value="General">General / Church-wide</option>}
               <option value="Men">Men's Ministry</option>
               <option value="Women">Women's Ministry</option>
               <option value="Youth">Youth Ministry</option>
@@ -87,53 +87,54 @@ export default function MinistryUpdatesManager() {
           </div>
 
           <div className="form-group">
-            <label>Title / Headline</label>
-            <input 
-              className="form-control" 
-              placeholder="e.g. Sunday Service Time Change" 
-              required 
-              value={title} 
-              onChange={e => setTitle(e.target.value)} 
-            />
+            <label>Headline</label>
+            <input className="form-control" placeholder="e.g. Youth Camp Registration" required value={title} onChange={e => setTitle(e.target.value)} />
           </div>
 
           <div className="form-group">
-            <label>Message Content</label>
-            <textarea 
-              className="form-control" 
-              placeholder="Type your announcement details here..." 
-              required 
-              rows="4"
-              value={content} 
-              onChange={e => setContent(e.target.value)} 
-            />
+            <label>Message</label>
+            <textarea className="form-control" placeholder="Details..." required rows="4" value={content} onChange={e => setContent(e.target.value)} />
           </div>
 
-          <button type="submit" className="btn btn-primary">
-            <Send size={18} /> Post Update
+          {/* IMAGE UPLOAD */}
+          <div className="form-group">
+            <label>Attach Image / Poster (Optional)</label>
+            <div style={{border:'2px dashed #ddd', padding:'20px', borderRadius:'8px', textAlign:'center', background:'#fafafa'}}>
+              <input 
+                id="fileInput"
+                type="file" 
+                accept="image/*" 
+                onChange={e => setFile(e.target.files[0])} 
+                style={{display:'none'}}
+              />
+              <label htmlFor="fileInput" style={{cursor:'pointer', display:'flex', flexDirection:'column', alignItems:'center', gap:'10px'}}>
+                <Upload size={24} color="#666"/>
+                <span style={{color:'#666', fontSize:'0.9rem'}}>{file ? file.name : "Click to upload a poster"}</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{width:'100%'}}>
+            <Send size={18} /> {loading ? 'Posting...' : 'Post Update'}
           </button>
         </form>
       </div>
 
-      {/* LIST OF POSTS */}
+      {/* LIST */}
       <h3>Previous Posts</h3>
       <div style={{display: 'grid', gap: '15px'}}>
         {updates.map(item => (
-          <div key={item._id} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+          <div key={item._id} className="list-item">
             <div>
               <div style={{display:'flex', alignItems:'center', gap:'10px', marginBottom:'5px'}}>
-                <span style={{
-                  fontSize:'0.7rem', fontWeight:'bold', textTransform:'uppercase', 
-                  backgroundColor: item.ministry === 'General' ? 'var(--church-gold)' : '#eee',
-                  color: item.ministry === 'General' ? 'white' : '#333',
-                  padding:'2px 8px', borderRadius:'4px'
-                }}>
+                <span style={{fontSize:'0.7rem', fontWeight:'bold', textTransform:'uppercase', backgroundColor: item.ministry === 'General' ? 'var(--church-gold)' : '#eee', color: item.ministry === 'General' ? 'white' : '#333', padding:'2px 8px', borderRadius:'4px'}}>
                   {item.ministry}
                 </span>
                 <span style={{fontSize:'0.8rem', color:'#999'}}>{new Date(item.createdAt).toLocaleDateString()}</span>
               </div>
               <h4 style={{margin: '0 0 5px 0'}}>{item.title}</h4>
-              <p style={{fontSize: '0.9rem', color: '#555', margin: 0}}>{item.content.substring(0, 100)}...</p>
+              {item.image && <span style={{fontSize:'0.8rem', color:'green', display:'block', marginBottom:'5px'}}>🖼️ Contains Image</span>}
+              <p style={{fontSize: '0.9rem', color: '#555', margin: 0}}>{item.content.substring(0, 60)}...</p>
             </div>
             <button onClick={() => handleDelete(item._id)} className="btn btn-red" style={{padding:'5px 10px'}}>
               <Trash2 size={16} />

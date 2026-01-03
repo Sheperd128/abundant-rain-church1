@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import api from '../../apiClient';
-import { Video, Calendar, MessageSquare, PlusCircle, Radio, Save, ExternalLink, Loader } from 'lucide-react';
+import { Video, Calendar, MessageSquare, PlusCircle, Radio, Save, ExternalLink, Loader, Youtube, Facebook } from 'lucide-react';
 
 export default function Dashboard() {
   const user = JSON.parse(localStorage.getItem('userInfo') || '{"name": "Admin"}');
   const [stats, setStats] = useState({ events: 0, prayers: 0, sermons: 0 });
   const [loading, setLoading] = useState(true);
+  
+  // Live Stream State
   const [streamUrl, setStreamUrl] = useState('');
   const [isLive, setIsLive] = useState(false);
   const [platform, setPlatform] = useState('YouTube');
+  
+  // Social Links State
+  const [youtubeLink, setYoutubeLink] = useState('');
+  const [facebookLink, setFacebookLink] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +36,8 @@ export default function Dashboard() {
           setStreamUrl(liveRes.data.embedUrl || '');
           setIsLive(liveRes.data.isActive || false);
           setPlatform(liveRes.data.platform || 'YouTube');
+          setYoutubeLink(liveRes.data.youtubeLink || 'https://youtube.com');
+          setFacebookLink(liveRes.data.facebookLink || 'https://facebook.com');
         }
       } catch (error) {
         console.error("Error loading dashboard:", error);
@@ -42,15 +50,22 @@ export default function Dashboard() {
 
   const handleSaveStream = async (e) => {
     e.preventDefault();
+    
+    // Auto-detect platform logic
     let currentPlatform = platform;
     if (streamUrl.includes('facebook')) currentPlatform = 'Facebook';
-    else if (streamUrl.includes('youtube') || streamUrl.includes('youtu.be')) currentPlatform = 'YouTube';
-
+    
     try {
-      await api.post('/live', { platform: currentPlatform, embedUrl: streamUrl, isActive: isLive });
-      alert(`Live stream updated! Status: ${isLive ? 'ON AIR' : 'OFFLINE'}`);
+      await api.post('/live', { 
+        platform: currentPlatform, 
+        embedUrl: streamUrl, 
+        isActive: isLive,
+        youtubeLink, // Save these links
+        facebookLink 
+      });
+      alert(`Settings updated! Status: ${isLive ? 'ON AIR' : 'OFFLINE'}`);
     } catch (error) {
-      alert('Error saving live stream settings.');
+      alert('Error saving live settings.');
     }
   };
 
@@ -58,17 +73,28 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="dashboard-header" style={{display:'flex', justifyContent:'space-between', alignItems:'flex-end', marginBottom:'20px'}}>
+      {/* IMPROVED HEADER SECTION */}
+      <div className="dashboard-header" style={{
+        backgroundColor: 'white', 
+        padding: '25px', 
+        borderRadius: '12px', 
+        boxShadow: '0 2px 10px rgba(0,0,0,0.05)', 
+        marginBottom: '30px',
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        borderLeft: '5px solid var(--church-blue)'
+      }}>
         <div>
-          <h1>Welcome, <span style={{color:'var(--church-blue)'}}>{user.name}</span></h1>
-          <p style={{color:'#666'}}>Here is what is happening at Abundant Rain today.</p>
+          <h1 style={{fontSize: '1.8rem', margin: 0, color: '#333'}}>Welcome back, {user.name}</h1>
+          <p style={{color:'#666', margin: '5px 0 0 0'}}>Manage your church content and live streams.</p>
         </div>
-        <div className="date-badge" style={{background:'white', padding:'8px 15px', borderRadius:'20px', boxShadow:'0 2px 5px rgba(0,0,0,0.1)'}}>
+        <div className="date-badge" style={{background:'var(--church-grey)', padding:'8px 15px', borderRadius:'8px', fontWeight: 'bold', color: 'var(--church-blue)'}}>
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </div>
       </div>
 
-      {/* STATS GRID (Responsive via CSS) */}
+      {/* STATS GRID */}
       <div className="dashboard-grid">
         <div className="stat-card" style={{borderLeft: '5px solid var(--church-blue)'}}>
           <div>
@@ -101,46 +127,73 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* SPLIT SECTION (Responsive via CSS) */}
       <div className="dashboard-split">
         
         {/* LIVE STREAM CARD */}
         <div className="admin-card" style={{flex: 2}}>
-          <div style={{display:'flex', justifyContent:'space-between', marginBottom:'15px'}}>
-            <h3 style={{display:'flex', gap:'10px'}}><Radio size={24} className={isLive ? "animate-pulse text-red" : ""} /> Live Stream Setup</h3>
+          <div style={{display:'flex', justifyContent:'space-between', marginBottom:'20px', borderBottom: '1px solid #eee', paddingBottom: '15px'}}>
+            <h3 style={{display:'flex', gap:'10px', margin: 0}}><Radio size={24} className={isLive ? "animate-pulse text-red" : ""} /> Live Stream Setup</h3>
             <span style={{background: isLive ? '#ffebeb' : '#eee', color: isLive ? 'red' : '#666', padding:'5px 12px', borderRadius:'15px', fontSize:'0.8rem', fontWeight:'bold'}}>
               {isLive ? '● ON AIR' : '○ OFFLINE'}
             </span>
           </div>
           
           <form onSubmit={handleSaveStream}>
-            <div className="form-group">
-              <label>Stream Embed URL / ID</label>
-              <input type="text" className="form-control" placeholder="Paste YouTube link here..." value={streamUrl} onChange={(e) => setStreamUrl(e.target.value)} />
+            <div className="form-group" style={{marginBottom: '20px'}}>
+              <label>1. Current Stream URL (Video Link)</label>
+              <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Paste YouTube link (e.g. https://youtu.be/...)" 
+                value={streamUrl} 
+                onChange={(e) => setStreamUrl(e.target.value)} 
+              />
+              <small style={{color: '#888'}}>Copy this from YouTube when you go live via OBS.</small>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>2. Channel Link (YouTube)</label>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                  <Youtube size={20} color="red" style={{marginRight: '10px'}}/>
+                  <input type="text" className="form-control" value={youtubeLink} onChange={(e) => setYoutubeLink(e.target.value)} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>3. Page Link (Facebook)</label>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                  <Facebook size={20} color="blue" style={{marginRight: '10px'}}/>
+                  <input type="text" className="form-control" value={facebookLink} onChange={(e) => setFacebookLink(e.target.value)} />
+                </div>
+              </div>
             </div>
             
-            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:'20px'}}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginTop:'20px', backgroundColor: '#f9f9f9', padding: '15px', borderRadius: '8px'}}>
               <label style={{display:'flex', gap:'10px', cursor:'pointer', alignItems:'center'}}>
                 <input type="checkbox" checked={isLive} onChange={(e) => setIsLive(e.target.checked)} style={{width:'20px', height:'20px'}} />
-                <span>Enable "Live Now" Badge</span>
+                <span style={{fontWeight: 'bold'}}>Switch to "ON AIR"</span>
               </label>
-              <button type="submit" className="btn btn-primary"><Save size={18} /> Save</button>
+              <button type="submit" className="btn btn-primary"><Save size={18} /> Update Settings</button>
             </div>
           </form>
         </div>
 
         {/* QUICK ACTIONS */}
         <div style={{flex: 1, display:'flex', flexDirection:'column', gap:'15px'}}>
-           <h3 style={{fontSize:'1.2rem', marginBottom:'5px'}}>Quick Actions</h3>
-           <a href="/admin/sermons" className="admin-card" style={{display:'flex', alignItems:'center', gap:'15px', padding:'15px', textDecoration:'none', color:'inherit', marginBottom:0}}>
-             <PlusCircle size={20} color="var(--church-blue)"/> <span>Add Sermon</span>
-           </a>
-           <a href="/admin/events" className="admin-card" style={{display:'flex', alignItems:'center', gap:'15px', padding:'15px', textDecoration:'none', color:'inherit', marginBottom:0}}>
-             <Calendar size={20} color="var(--church-blue)"/> <span>Create Event</span>
-           </a>
-           <a href="/" target="_blank" className="admin-card" style={{display:'flex', alignItems:'center', gap:'15px', padding:'15px', textDecoration:'none', color:'var(--church-blue)', background:'#eef2ff', marginBottom:0}}>
-             <ExternalLink size={20} /> <span>View Website</span>
-           </a>
+           <div className="admin-card" style={{marginBottom: 0}}>
+             <h3 style={{fontSize:'1.2rem', marginBottom:'15px'}}>Quick Actions</h3>
+             <div style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
+               <a href="/admin/sermons" className="btn" style={{border: '1px solid #eee', justifyContent: 'flex-start', color: '#555'}}>
+                 <PlusCircle size={20} color="var(--church-blue)"/> Add Sermon
+               </a>
+               <a href="/admin/events" className="btn" style={{border: '1px solid #eee', justifyContent: 'flex-start', color: '#555'}}>
+                 <Calendar size={20} color="var(--church-blue)"/> Create Event
+               </a>
+               <a href="/" target="_blank" className="btn" style={{backgroundColor: '#eef2ff', color: 'var(--church-blue)', justifyContent: 'center', marginTop: '10px'}}>
+                 <ExternalLink size={20} /> Go to Website
+               </a>
+             </div>
+           </div>
         </div>
 
       </div>

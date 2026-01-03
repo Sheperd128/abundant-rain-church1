@@ -21,16 +21,18 @@ const getMinistryUpdates = async (req, res) => {
   }
 };
 
-// 3. Create a New Update
+// 3. Create a New Update (With Image Support)
 const createMinistryUpdate = async (req, res) => {
   const { title, content, ministry } = req.body;
   
-  // Default to what was sent in the form
+  // Handle Image Upload - Check if a file was sent
+  // We save the path starting with /uploads/ because that matches the frontend public folder structure
+  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
   let targetMinistry = ministry;
   
   // LOGIC CHECK: 
   // If user is NOT Superadmin AND NOT Admin, force them to their assigned ministry.
-  // This allows 'superadmin' and 'admin' (helpers) to post to 'General' or any group.
   if (req.user.role !== 'superadmin' && req.user.role !== 'admin') {
     if (req.user.ministry && req.user.ministry !== 'General') {
       targetMinistry = req.user.ministry; 
@@ -42,12 +44,13 @@ const createMinistryUpdate = async (req, res) => {
       title,
       content,
       ministry: targetMinistry,
+      image: imagePath, // <--- Save the image path to database
       author: req.user._id
     });
     const createdUpdate = await update.save();
     res.status(201).json(createdUpdate);
   } catch (error) {
-    console.error("Backend Error:", error); // Helps debug in terminal
+    console.error("Backend Error:", error); 
     res.status(400).json({ message: error.message });
   }
 };
@@ -68,7 +71,7 @@ const deleteMinistryUpdate = async (req, res) => {
   }
 };
 
-// --- EXPORTS (CRITICAL) ---
+// --- EXPORTS ---
 module.exports = { 
   getAllUpdates, 
   getMinistryUpdates, 

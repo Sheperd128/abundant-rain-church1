@@ -7,15 +7,14 @@ const {
   deleteMinistryUpdate 
 } = require('../controllers/ministryController');
 const { protect } = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware'); // Import the new middleware
 
-// 1. GET ALL UPDATES (This is what the News page uses)
-router.get('/', getAllUpdates); 
-
-// 2. Get updates by specific category (e.g., /api/ministries/Men)
+router.get('/', getAllUpdates);
 router.get('/:category', getMinistryUpdates);
 
-// 3. Create and Delete (Protected)
-router.post('/', protect, createMinistryUpdate);
+// UPDATE THIS LINE: Add 'upload.single'
+router.post('/', protect, upload.single('image'), createMinistryUpdate); 
+
 router.delete('/:id', protect, deleteMinistryUpdate);
 
 module.exports = router;
