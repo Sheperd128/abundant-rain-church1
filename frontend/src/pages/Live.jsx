@@ -35,7 +35,7 @@ export default function Live() {
       
       if(videoId) return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
       
-      return url; // Return original if it's not a standard YouTube link (e.g. Facebook embed src)
+      return url; 
     } catch (e) {
       return url;
     }
@@ -56,7 +56,7 @@ export default function Live() {
             {stream && stream.isActive && stream.embedUrl ? (
               <div style={{
                 position: 'relative', 
-                paddingBottom: '56.25%', /* 16:9 Aspect Ratio */
+                paddingBottom: '56.25%', 
                 height: 0, 
                 overflow: 'hidden', 
                 background: '#000', 
@@ -84,7 +84,7 @@ export default function Live() {
                 <h2 style={{color: 'white', marginBottom: '15px'}}>We are currently offline</h2>
                 <p style={{color: '#888'}}>Please check back during our service times (Sundays 10:00 AM).</p>
                 <p style={{marginTop: '20px'}}>
-                  <a href={stream?.youtubeLink || 'https://www.youtube.com/@abundant_rainVosloorus'} target="_blank" rel="noreferrer" style={{color: 'var(--church-gold)', textDecoration: 'underline'}}>View past sermons on YouTube</a>
+                  <a href={stream?.youtubeLink || 'https://youtube.com'} target="_blank" rel="noreferrer" style={{color: 'var(--church-gold)', textDecoration: 'underline'}}>View past sermons on YouTube</a>
                 </p>
               </div>
             )}
@@ -110,21 +110,22 @@ export default function Live() {
               </div>
               
               <div style={{display: 'flex', gap: '15px', flexWrap: 'wrap'}}>
+                {/* Dynamically uses the link from Database, or falls back to default if empty */}
                 <a 
-                  href={stream?.facebookLink || "www.facebook.com"} 
+                  href={stream?.facebookLink || "https://facebook.com"} 
                   target="_blank" 
                   rel="noreferrer" 
                   className="btn" 
-                  style={{backgroundColor: '#1877F2', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', border: 'none'}}
+                  style={{backgroundColor: '#1877F2', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', border: 'none', padding: '12px 25px', borderRadius: '50px', textDecoration: 'none'}}
                 >
                   <Facebook size={18} /> Watch on Facebook
                 </a>
                 <a 
-                  href={stream?.youtubeLink || "https://www.youtube.com/@abundant_rainVosloorus"} 
+                  href={stream?.youtubeLink || "https://youtube.com"} 
                   target="_blank" 
                   rel="noreferrer" 
                   className="btn" 
-                  style={{backgroundColor: '#FF0000', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', border: 'none'}}
+                  style={{backgroundColor: '#FF0000', color: 'white', display: 'flex', alignItems: 'center', gap: '8px', border: 'none', padding: '12px 25px', borderRadius: '50px', textDecoration: 'none'}}
                 >
                   <Youtube size={18} /> Watch on YouTube
                 </a>

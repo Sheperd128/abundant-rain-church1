@@ -36,8 +36,9 @@ export default function Dashboard() {
           setStreamUrl(liveRes.data.embedUrl || '');
           setIsLive(liveRes.data.isActive || false);
           setPlatform(liveRes.data.platform || 'YouTube');
-          setYoutubeLink(liveRes.data.youtubeLink || 'https://youtube.com');
-          setFacebookLink(liveRes.data.facebookLink || 'https://facebook.com');
+          // Load existing links or default empty string
+          setYoutubeLink(liveRes.data.youtubeLink || '');
+          setFacebookLink(liveRes.data.facebookLink || '');
         }
       } catch (error) {
         console.error("Error loading dashboard:", error);
@@ -60,8 +61,8 @@ export default function Dashboard() {
         platform: currentPlatform, 
         embedUrl: streamUrl, 
         isActive: isLive,
-        youtubeLink, // Save these links
-        facebookLink 
+        youtubeLink, // Send to backend
+        facebookLink // Send to backend
       });
       alert(`Settings updated! Status: ${isLive ? 'ON AIR' : 'OFFLINE'}`);
     } catch (error) {
@@ -73,7 +74,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      {/* IMPROVED HEADER SECTION */}
+      {/* HEADER SECTION */}
       <div className="dashboard-header" style={{
         backgroundColor: 'white', 
         padding: '25px', 
@@ -156,14 +157,14 @@ export default function Dashboard() {
                 <label>2. Channel Link (YouTube)</label>
                 <div style={{display: 'flex', alignItems: 'center'}}>
                   <Youtube size={20} color="red" style={{marginRight: '10px'}}/>
-                  <input type="text" className="form-control" value={youtubeLink} onChange={(e) => setYoutubeLink(e.target.value)} />
+                  <input type="text" className="form-control" value={youtubeLink} onChange={(e) => setYoutubeLink(e.target.value)} placeholder="https://youtube.com/..." />
                 </div>
               </div>
               <div className="form-group">
                 <label>3. Page Link (Facebook)</label>
                 <div style={{display: 'flex', alignItems: 'center'}}>
                   <Facebook size={20} color="blue" style={{marginRight: '10px'}}/>
-                  <input type="text" className="form-control" value={facebookLink} onChange={(e) => setFacebookLink(e.target.value)} />
+                  <input type="text" className="form-control" value={facebookLink} onChange={(e) => setFacebookLink(e.target.value)} placeholder="https://facebook.com/..." />
                 </div>
               </div>
             </div>
